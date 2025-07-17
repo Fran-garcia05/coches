@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catálogo de Coches</title>
+  <style>
+    /* Estilos generales */
+    body {
+      margin: 0;
+      background: #f2f2f2;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-y: auto;
+      color: #333;
+    }
+
+    .contenido-central {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 1rem;
+    }
+
+    #coches-destacados {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .coche-card {
+      background: linear-gradient(135deg, #ffffff 0%, #e0e6f8 100%);
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .coche-card img {
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      object-fit: cover;
+      aspect-ratio: 3/2;
+    }
+
+    .coche-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px rgba(0, 123, 255, 0.3);
+    }
+
+    .coche-card h3 {
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      color: #0d47a1;
+      text-align: center;
+    }
+
+    #toggleCatalogoBtn {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+      box-shadow: 0 6px 12px rgba(0,123,255,0.35);
+      user-select: none;
+      max-width: 220px;
+      text-align: center;
+      letter-spacing: 0.03em;
+      margin-bottom: 1rem;
+    }
+
+    #toggleCatalogoBtn:hover {
+      background-color: #0056b3;
+      box-shadow: 0 8px 20px rgba(0,86,179,0.6);
+      transform: translateY(-2px);
+    }
+
+    #catalogo-coches {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.2rem;
+      margin-top: 0;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .catalogo-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+      padding: 0.8rem 0.6rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .catalogo-card img {
+      width: 70%;
+      height: 100px;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      object-fit: contain;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .catalogo-card h4 {
+      margin: 0 0 0.25rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #0b3d91;
+    }
+
+    .catalogo-card p {
+      margin: 0;
+      font-weight: 500;
+      color: #2a2a2a;
+      font-size: 0.9rem;
+    }
+
+    .catalogo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 30px rgba(0, 123, 255, 0.35);
+    }
+
+    #filtros-catalogo {
+      display: none;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    #filtros-catalogo select {
+      padding: 0.4rem 0.8rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      min-width: 140px;
+    }
+
+    #modalCoche {
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #222;
+      line-height: 1.4;
+    }
+
+    .modal-content img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+      color: #0a357e;
+      font-weight: 700;
+    }
+
+    .modal-content p {
+      margin: 0.3rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .cerrar {
+      color: #888;
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 30px;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.25s ease;
+    }
+
+    .cerrar:hover {
+      color: #0b3d91;
+    }
+
+    /* Carrito estilos */
+    #carrito {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #007BFF;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 11000;
+      box-shadow: 0 6px 12px rgba(0,123,255,0.5);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #resumenCarrito {
+      position: fixed;
+      top: 3.5rem;
+      right: 1rem;
+      background: white;
+      color: #222;
+      width: 320px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-radius: 15px;
+      padding: 1rem;
+      display: none;
+      z-index: 11000;
+    }
+
+    #resumenCarrito h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    #resumenCarrito ul {
+      list-style: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    #resumenCarrito ul li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #ccc;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    #vaciarCarritoBtn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.3rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.25s ease;
+    }
+
+    #vaciarCarritoBtn:hover {
+      background-color: #b02a37;
+    }
+  .footer {
+  background-color: #0d47a1;
+  color: #fff;
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+.footer-contenido {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.footer-redes {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-redes img {
+  width: 32px;
+  height: 32px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.footer-contacto p {
+  margin: 0;
+  font-weight: 500;
+  color: #e3f2fd;
+}
+/* Barra de navegación */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #0d47a1;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.navbar-contenido {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar .logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li a {
+  color: #e3f2fd;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar-links li a:hover {
+  color: #ffffff;
+}
+
+/* Espaciado para que el contenido no quede oculto por la barra fija */
+body {
+  scroll-behavior: smooth;
+  padding-top: 70px; /* ajusta según la altura de la barra */
+}
+#logoutBtn {
+  position: fixed;
+  top: 65px;
+  left: 20px;
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+#logoutBtn:hover {
+  background-color: #b02a37;
+}
+
+
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-contenido">
+    <span class="logo">Catálogo de Coches</span>
+    <ul class="navbar-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+<button id="logoutBtn">Cerrar sesión</button>
+  <div class="contenido-central" id="inicio">
+    <h1>Coches más destacados</h1>
+    <div id="coches-destacados"></div>
+     <h2 id="catalogo">Catálogo de coches</h2>
+    <button id="toggleCatalogoBtn">Ver catálogo completo</button>
+
+    <div id="filtros-catalogo"></div>
+
+    <div id="catalogo-coches"></div>
+  </div>
+
+  <!-- Carrito fijo arriba a la derecha -->
+  <div id="carrito">🛒 <span id="contadorCarrito">0</span> coches</div>
+
+  <div id="resumenCarrito">
+    <h3>Carrito de compra</h3>
+    <ul id="listaCarrito"></ul>
+    <button id="vaciarCarritoBtn">Vaciar carrito</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalCoche">
+    <div class="modal-content">
+      <span class="cerrar" title="Cerrar modal">&times;</span>
+      <div id="contenidoModal"></div>
+    </div>
+  </div>
+<footer class="footer" id="contacto">
+  <div class="footer-contenido">
+    <p>&copy; 2025 Catálogo de Coches. Todos los derechos reservados.</p>
+    <div class="footer-redes">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram" />
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/gmail.png" alt="Gmail" />
+    </div>
+    <div class="footer-contacto">
+      <p><strong>Contacto:</strong> +34 662 906 545</p>
+    </div>
+  </div>
+</footer>
+<script>
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    window.location.href = 'logout.php';
+  });
+</script>
+
+  <script src="funciones.js"></script>
+</body>
+</html>

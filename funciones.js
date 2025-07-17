@@ -1,0 +1,295 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Variables DOM
+  const destacadosContenedor = document.getElementById("coches-destacados");
+  const catalogoContenedor = document.getElementById("catalogo-coches");
+  const filtrosContenedor = document.getElementById("filtros-catalogo");
+  const toggleCatalogoBtn = document.getElementById("toggleCatalogoBtn");
+  const modal = document.getElementById("modalCoche");
+  const contenidoModal = document.getElementById("contenidoModal");
+  const cerrarModalBtn = document.querySelector(".cerrar");
+
+  let coches = []; // Todos los coches recibidos
+  let catalogoVisible = false;
+
+  // Función para abrir modal
+  function abrirModal(coche) {
+    contenidoModal.innerHTML = `
+      <h2>${coche.marca} ${coche.modelo}</h2>
+      <img src="img/${coche.imagen}" alt="${coche.marca} ${coche.modelo}">
+      <p><strong>Año:</strong> ${coche.año}</p>
+      <p><strong>Precio:</strong> €${parseInt(coche.precio).toLocaleString()}</p>
+      <p><strong>Kilometraje:</strong> ${coche.kilometraje} km</p>
+      <p><strong>Combustible:</strong> ${coche.combustible}</p>
+      <p><strong>Estado:</strong> ${coche.estado}</p>
+      <p><strong>Fecha de publicación:</strong> ${coche.fecha_publicacion}</p>
+      <button id="btnComprar" style="
+        margin-top: 1rem;
+        padding: 0.7rem 1.3rem;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 1rem;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      ">Comprar</button>
+    `;
+
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+
+    // Botón comprar
+    const btnComprar = document.getElementById("btnComprar");
+    btnComprar.onclick = () => {
+      agregarAlCarrito(coche);
+      alert(`¡Has añadido ${coche.marca} ${coche.modelo} al carrito!`);
+      cerrarModal();
+    };
+  }
+
+  // Función para cerrar modal
+  function cerrarModal() {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  // Mostrar coches destacados
+  function mostrarDestacados() {
+    const destacados = coches.slice(0, 6);
+    destacadosContenedor.innerHTML = "";
+
+    destacados.forEach(coche => {
+      const div = document.createElement("div");
+      div.classList.add("coche-card");
+      div.innerHTML = `
+        <img src="img/${coche.imagen}" alt="${coche.marca} ${coche.modelo}">
+        <h3>${coche.marca} ${coche.modelo}</h3>
+        <p>€${parseInt(coche.precio).toLocaleString()}</p>
+      `;
+      div.onclick = () => abrirModal(coche);
+      destacadosContenedor.appendChild(div);
+    });
+  }
+
+  // Mostrar catálogo completo
+  function mostrarCatalogo(cochesFiltrados) {
+    catalogoContenedor.innerHTML = "";
+    if (!cochesFiltrados) cochesFiltrados = coches;
+
+    cochesFiltrados.forEach(coche => {
+      const div = document.createElement("div");
+      div.classList.add("catalogo-card");
+      div.innerHTML = `
+        <img src="img/${coche.imagen}" alt="${coche.marca} ${coche.modelo}">
+        <h4>${coche.marca} ${coche.modelo}</h4>
+        <p>€${parseInt(coche.precio).toLocaleString()}</p>
+      `;
+      div.onclick = () => abrirModal(coche);
+      catalogoContenedor.appendChild(div);
+    });
+  }
+
+  // Crear filtros para catálogo
+  function crearFiltros() {
+    filtrosContenedor.innerHTML = `
+      <select id="filtroMarca">
+        <option value="">Marca</option>
+        ${[...new Set(coches.map(c => c.marca))].sort().map(marca => `<option value="${marca}">${marca}</option>`).join('')}
+      </select>
+
+      <select id="filtroPrecio">
+        <option value="">Precio</option>
+        <option value="menor">Menor a Mayor</option>
+        <option value="mayor">Mayor a Menor</option>
+      </select>
+
+      <select id="filtroAño">
+        <option value="">Año</option>
+        <option value="nuevo">Más nuevo</option>
+        <option value="viejo">Más viejo</option>
+      </select>
+    `;
+
+    // Añadir eventos filtro
+    document.getElementById("filtroMarca").addEventListener("change", filtrarCatalogo);
+    document.getElementById("filtroPrecio").addEventListener("change", filtrarCatalogo);
+    document.getElementById("filtroAño").addEventListener("change", filtrarCatalogo);
+  }
+
+  // Función para filtrar catálogo
+  function filtrarCatalogo() {
+    const marca = document.getElementById("filtroMarca").value;
+    const precio = document.getElementById("filtroPrecio").value;
+    const año = document.getElementById("filtroAño").value;
+
+    let filtrados = [...coches];
+
+    if (marca) filtrados = filtrados.filter(c => c.marca === marca);
+
+    if (precio === "menor") {
+      filtrados.sort((a,b) => a.precio - b.precio);
+    } else if (precio === "mayor") {
+      filtrados.sort((a,b) => b.precio - a.precio);
+    }
+
+    if (año === "nuevo") {
+      filtrados.sort((a,b) => b.año - a.año);
+    } else if (año === "viejo") {
+      filtrados.sort((a,b) => a.año - b.año);
+    }
+
+    mostrarCatalogo(filtrados);
+  }
+
+  // Toggle catálogo visible
+  toggleCatalogoBtn.addEventListener("click", () => {
+    catalogoVisible = !catalogoVisible;
+
+    if (catalogoVisible) {
+      filtrosContenedor.style.display = "flex";
+      catalogoContenedor.style.display = "grid";
+      toggleCatalogoBtn.textContent = "Ocultar catálogo completo";
+      mostrarCatalogo();
+      crearFiltros();
+    } else {
+      filtrosContenedor.style.display = "none";
+      catalogoContenedor.style.display = "none";
+      toggleCatalogoBtn.textContent = "Ver catálogo completo";
+    }
+  });
+
+  // Cerrar modal al hacer click en la X o fuera contenido
+  cerrarModalBtn.onclick = cerrarModal;
+  modal.onclick = function (e) {
+    if (e.target === modal) cerrarModal();
+  };
+
+  // Obtener coches desde el servidor
+  async function obtenerCoches() {
+    try {
+      const response = await fetch("obtenerCoches.php");
+      if (!response.ok) throw new Error("Error al obtener coches");
+      coches = await response.json();
+
+      mostrarDestacados();
+    } catch (error) {
+      console.error(error);
+      destacadosContenedor.innerHTML = "<p>Error cargando coches.</p>";
+    }
+  }
+
+  obtenerCoches();
+
+  // --- Carrito de compra ---
+ let carrito = [];
+let carritoVisible = false;
+
+function agregarAlCarrito(auto) {
+  const index = carrito.findIndex(item =>
+    item.marca === auto.marca &&
+    item.modelo === auto.modelo &&
+    item.año === auto.año &&
+    item.precio === auto.precio
+  );
+
+  if (index >= 0) {
+    carrito[index].cantidad++;
+  } else {
+    carrito.push({ ...auto, cantidad: 1 });
+  }
+
+  actualizarContador();
+  mostrarResumen(); // Mostrar carrito visible al agregar
+}
+
+function eliminarDelCarrito(auto) {
+  carrito = carrito.filter(item =>
+    !(item.marca === auto.marca &&
+      item.modelo === auto.modelo &&
+      item.año === auto.año &&
+      item.precio === auto.precio)
+  );
+
+  actualizarContador();
+  mostrarResumen(); // Mostrar carrito visible al eliminar
+}
+
+function actualizarContador() {
+  const contador = document.getElementById("contadorCarrito");
+  const totalCantidad = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+  contador.textContent = totalCantidad > 0 ? totalCantidad : "";
+}
+
+function mostrarResumen(toggle = false) {
+  const resumen = document.getElementById("resumenCarrito");
+  const lista = document.getElementById("listaCarrito");
+  lista.innerHTML = "";
+
+  if (carrito.length === 0) {
+    lista.innerHTML = "<li>Tu carrito está vacío.</li>";
+  } else {
+    carrito.forEach(item => {
+      const li = document.createElement("li");
+      li.style.marginBottom = "0.5rem";
+      li.style.display = "flex";
+      li.style.justifyContent = "space-between";
+      li.style.alignItems = "center";
+
+      const texto = document.createElement("span");
+      texto.textContent = `${item.marca} ${item.modelo} (${item.año}) x${item.cantidad} - €${(item.precio * item.cantidad).toLocaleString()}`;
+
+      const btnEliminar = document.createElement("button");
+      btnEliminar.textContent = "Eliminar";
+      btnEliminar.style.padding = "0.2rem 0.5rem";
+      btnEliminar.style.fontSize = "0.8rem";
+      btnEliminar.style.backgroundColor = "#dc3545";
+      btnEliminar.style.color = "white";
+      btnEliminar.style.border = "none";
+      btnEliminar.style.borderRadius = "6px";
+      btnEliminar.style.cursor = "pointer";
+
+      btnEliminar.onclick = () => eliminarDelCarrito(item);
+
+      li.appendChild(texto);
+      li.appendChild(btnEliminar);
+      lista.appendChild(li);
+    });
+
+    const totalGeneral = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    const totalLi = document.createElement("li");
+    totalLi.style.fontWeight = "700";
+    totalLi.style.marginTop = "1rem";
+    totalLi.textContent = `Total: €${totalGeneral.toLocaleString()}`;
+    lista.appendChild(totalLi);
+  }
+
+  if (toggle) {
+    carritoVisible = !carritoVisible;
+    resumen.style.display = carritoVisible ? "block" : "none";
+  } else {
+    resumen.style.display = "block";
+    carritoVisible = true;
+  }
+}
+
+function vaciarCarrito() {
+  carrito = [];
+  actualizarContador();
+  mostrarResumen(); // Mostrar resumen forzado visible
+}
+
+// Eventos
+
+// Botón carrito abre/cierra resumen con toggle
+document.getElementById("carrito").addEventListener("click", () => mostrarResumen(true));
+
+// Botón vaciar carrito
+document.getElementById("vaciarCarritoBtn").addEventListener("click", vaciarCarrito);
+
+
+
+})
+
+
