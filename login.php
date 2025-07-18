@@ -58,9 +58,9 @@ if (isset($_POST['login'])) {
         $user = $result->fetch_assoc();
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['id_usuario'] = $user['id'];
             $_SESSION['user_name'] = $user['nombre'];
-            header('Location: ../index.html'); 
+            header('Location: index.html'); 
             exit;
         } else {
             $message = "Correo o contraseña incorrectos.";
