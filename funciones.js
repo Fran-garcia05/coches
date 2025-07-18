@@ -125,11 +125,19 @@ document.addEventListener("DOMContentLoaded", function () {
         <option value="nuevo">Más nuevo</option>
         <option value="viejo">Más viejo</option>
       </select>
+
+      <select id="filtroEstado">
+        <option value="">Estado</option>
+        <option value="Disponible">Disponible</option>
+        <option value="Vendido">Vendido</option>
+        <option value="Reservado">Reservado</option>
+      </select>
     `;
 
     document.getElementById("filtroMarca").addEventListener("change", filtrarCatalogo);
     document.getElementById("filtroPrecio").addEventListener("change", filtrarCatalogo);
     document.getElementById("filtroAño").addEventListener("change", filtrarCatalogo);
+    document.getElementById("filtroEstado").addEventListener("change", filtrarCatalogo);
   }
 
   // Filtrar catálogo
@@ -137,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const marca = document.getElementById("filtroMarca").value;
     const precio = document.getElementById("filtroPrecio").value;
     const año = document.getElementById("filtroAño").value;
+    const estado = document.getElementById("filtroEstado").value;
 
     let filtrados = [...coches];
 
@@ -148,6 +157,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (año === "nuevo") filtrados.sort((a,b) => b.año - a.año);
     else if (año === "viejo") filtrados.sort((a,b) => a.año - b.año);
 
+    if (estado) filtrados = filtrados.filter(c => c.estado === estado);
+
+    console.log("Coches filtrados (filtrarCatalogo):", filtrados);
     mostrarCatalogo(filtrados);
   }
 
@@ -178,12 +190,21 @@ document.addEventListener("DOMContentLoaded", function () {
   async function obtenerCoches() {
     try {
       const response = await fetch("obtenerCoches.php");
-      if (!response.ok) throw new Error("Error al obtener coches");
+      console.log("Respuesta raw de obtenerCoches.php:", response);
+      if (!response.ok) {
+        throw new Error("Error HTTP al obtener coches: " + response.status);
+      }
       coches = await response.json();
+      // Estandarizar el estado de los coches
+      coches = coches.map(coche => ({
+        ...coche,
+        estado: coche.estado.charAt(0).toUpperCase() + coche.estado.slice(1).toLowerCase()
+      }));
+      console.log("Coches cargados desde el servidor:", coches);
 
       mostrarDestacados();
     } catch (error) {
-      console.error(error);
+      console.error("Error al cargar coches en obtenerCoches():", error);
       destacadosContenedor.innerHTML = "<p>Error cargando coches.</p>";
     }
   }

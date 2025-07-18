@@ -40,7 +40,7 @@ $db = new Database();
 $conexion = $db->getConexion();
 
 // Insertar compra
-$sqlInsert = "INSERT INTO compras (id_usuario, id_coche, precio_coche) VALUES (?, ?, ?)";
+$sqlInsert = "INSERT IGNORE INTO compras (id_usuario, id_coche, precio_coche) VALUES (?, ?, ?)";
 $stmtInsert = $conexion->prepare($sqlInsert);
 
 $stmtInsert->bind_param("iid", $idUsuario, $idCoche, $precioCoche);

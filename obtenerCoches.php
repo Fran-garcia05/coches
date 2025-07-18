@@ -10,7 +10,7 @@ if ($conexion->connect_error) {
   exit;
 }
 
-$sql = "SELECT id, marca, modelo, año, precio, kilometraje, combustible, fecha_publicacion, imagen, estado FROM coches WHERE estado = 'Disponible' ORDER BY fecha_publicacion DESC LIMIT 36";
+$sql = "SELECT id, marca, modelo, año, precio, kilometraje, combustible, fecha_publicacion, imagen, estado FROM coches ORDER BY fecha_publicacion DESC LIMIT 36";
 $resultado = $conexion->query($sql);
 
 if (!$resultado) {
