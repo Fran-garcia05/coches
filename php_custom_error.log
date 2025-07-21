@@ -1,0 +1,77 @@
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"12","precio_coche":"27500.00"}'
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '12',
+  'precio_coche' => '27500.00',
+)
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"22","precio_coche":"13800.00"}'
+[18-Jul-2025 13:56:11 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '22',
+  'precio_coche' => '13800.00',
+)
+[21-Jul-2025 09:16:08 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 09:16:08 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"10","precio_coche":"36500.00"}'
+[21-Jul-2025 09:16:08 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '10',
+  'precio_coche' => '36500.00',
+)
+[21-Jul-2025 10:54:45 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:54:45 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"12","precio_coche":"27500.00"}'
+[21-Jul-2025 10:54:45 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '12',
+  'precio_coche' => '27500.00',
+)
+[21-Jul-2025 10:55:24 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:55:24 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"20","precio_coche":"8700.00"}'
+[21-Jul-2025 10:55:24 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '20',
+  'precio_coche' => '8700.00',
+)
+[21-Jul-2025 10:56:38 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:56:38 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"23","precio_coche":"23100.00"}'
+[21-Jul-2025 10:56:38 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '23',
+  'precio_coche' => '23100.00',
+)
+[21-Jul-2025 10:57:05 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:57:05 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"20","precio_coche":"8700.00"}'
+[21-Jul-2025 10:57:05 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '20',
+  'precio_coche' => '8700.00',
+)
+[21-Jul-2025 10:58:10 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:58:10 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"20","precio_coche":"8700.00"}'
+[21-Jul-2025 10:58:10 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '20',
+  'precio_coche' => '8700.00',
+)
+[21-Jul-2025 10:58:34 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:58:34 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"20","precio_coche":"8700.00"}'
+[21-Jul-2025 10:58:34 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '20',
+  'precio_coche' => '8700.00',
+)
+[21-Jul-2025 10:59:50 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 10:59:50 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"16","precio_coche":"68900.00"}'
+[21-Jul-2025 10:59:50 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '16',
+  'precio_coche' => '68900.00',
+)
+[21-Jul-2025 11:02:43 Europe/Berlin] procesarCompra.php: Content-Type recibido = application/json
+[21-Jul-2025 11:02:43 Europe/Berlin] procesarCompra.php: Raw input = '{"id_usuario":1,"id_coche":"17","precio_coche":"32900.00"}'
+[21-Jul-2025 11:02:43 Europe/Berlin] procesarCompra.php: Datos recibidos (var_export): array (
+  'id_usuario' => 1,
+  'id_coche' => '17',
+  'precio_coche' => '32900.00',
+)
