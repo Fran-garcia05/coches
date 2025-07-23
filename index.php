@@ -1,3 +1,16 @@
+<?php
+
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+
+//comprobar si el usuario ya está logueado
+if(!isset($_SESSION['id_usuario'])){
+    //si está logueado redirigir a index
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <!-- Declara un documento HTML5. -->
 
@@ -690,7 +703,7 @@
     <h1>Coches más destacados</h1>
     <!-- Título para la sección de coches destacados. -->
     <div id="coches-destacados"></div>
-    <!-- Contenedor para las tarjetas de coches destacados, llenado dinámicamente con JavaScript. -->
+    <!-- Contenedeor para las tarjetas de coches destacados, llenado dinámicamente con JavaScript. -->
 
     <h2 id="catalogo">Catálogo de coches</h2>
     <!-- Título para la sección del catálogo completo, con ID para navegación ancla. -->
@@ -758,7 +771,7 @@
   </script>
 
   <script src="funciones.js"></script>
-  <!-- Incluye un archivo JavaScript externo (funciones.js) que probablemente contiene
-       la lógica para cargar coches, manejar el catálogo, filtros, carrito y modal. -->
+  <!-- Incluye un archivo JavaScript externo (funciones.js) que contiene
+       el código para cargar coches, manejar el catálogo, filtros, carrito y modal. -->
 </body>
 </html>

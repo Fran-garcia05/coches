@@ -139,6 +139,7 @@ if (isset($_POST['login'])) {
         $user = $result->fetch_assoc();
         // Obtiene la primera fila del resultado como un array asociativo
         // con las claves id, nombre y password.
+        var_dump($user['id']);
 
         if ($user && password_verify($password, $user['password'])) {
         // Verifica si se encontró un usuario ($user no es false) y si la contraseña
@@ -150,8 +151,11 @@ if (isset($_POST['login'])) {
             $_SESSION['user_name'] = $user['nombre'];
             // Almacena el nombre del usuario en la sesión.
 
-            header('Location: index.html');
-            // Redirige al usuario a la página index.html tras un inicio de sesión exitoso.
+            session_write_close();
+            // Guarda los datos de la sesión de forma explícita.
+
+            header('Location: index.php');
+            // Redirige al usuario a la página index.php tras un inicio de sesión exitoso.
 
             exit;
             // Detiene la ejecución del script para evitar que se procese más código.
