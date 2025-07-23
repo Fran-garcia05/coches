@@ -86,6 +86,65 @@ $conexion = $db->getConexion();
 // Obtiene la conexión a la base de datos desde el objeto $db
 // y la almacena en la variable $conexion.
 
+// Verificar si el coche ya está vendido
+$sqlVerificar = "SELECT estado FROM coches WHERE id = ?";
+// Crea una instrucción SQL que busca el "estado" (como "Vendido" o "Disponible") de un coche en la tabla "coches" usando su ID.
+// El "?" es un marcador que luego se reemplazará por el ID real del coche.
+
+$stmtVerificar = $conexion->prepare($sqlVerificar);
+// Prepara la instrucción SQL para ejecutarla de forma segura.
+// $conexion es un objeto que conecta con la base de datos (creado antes en el código).
+// $stmtVerificar guarda la consulta lista para usar.
+
+$stmtVerificar->bind_param("i", $idCoche);
+// Vincula el ID del coche ($idCoche) al "?" de la consulta SQL.
+// "i" significa que el ID es un número entero (integer).
+// $idCoche es una variable que contiene el ID del coche que queremos verificar.
+
+$stmtVerificar->execute();
+// Ejecuta la consulta SQL en la base de datos para buscar el estado del coche con el ID dado.
+
+$resultado = $stmtVerificar->get_result();
+// Guarda el resultado de la consulta en la variable $resultado.
+// Esto contiene la información que la base de datos devolvió (el estado del coche).
+
+$coche = $resultado->fetch_assoc();
+// Extrae la primera fila del resultado como un array (clave-valor, por ejemplo, ["estado" => "Vendido"]).
+// $coche guarda los datos del coche; si no se encuentra el coche, $coche será null.
+
+//mensaje para cuando alguien intente comprar un coche que ya ha sido vendido
+if ($coche && strtolower($coche['estado']) === 'vendido') {
+// Comprueba si el coche existe ($coche no es null) y si su estado en minúsculas es "vendido".
+// strtolower() convierte el estado (como "Vendido" o "VENDIDO") a minúsculas para compararlo.
+
+    http_response_code(409); // Conflict
+    // Establece un código HTTP 409, que indica un conflicto (el coche ya está vendido).
+    // Esto es útil para APIs que el navegador o JavaScript entenderán.
+
+    echo json_encode(["error" => "Este coche ya ha sido vendido."]);
+    // Envía un mensaje en formato JSON ({"error": "Este coche ya ha sido vendido."}) al navegador o JavaScript.
+    // Indica que no se puede comprar porque el coche ya fue vendido.
+
+    exit;
+    // Detiene el código aquí para no seguir procesando nada más.
+}
+
+if ($coche && strtolower($coche['estado']) === 'reservado') {
+// Comprueba si el coche existe ($coche no es null) y si su estado en minúsculas es "reservado".
+// strtolower() asegura que el estado se compare correctamente (por ejemplo, "Reservado" o "RESERVADO").
+
+    http_response_code(409); // Conflict
+    // Establece un código HTTP 409 para indicar un conflicto (el coche está reservado).
+
+    echo json_encode(["error" => "Este vehículo ya se encuentra reservado."]);
+    // Envía un mensaje JSON ({"error": "Este vehículo ya se encuentra reservado."}) al navegador o JavaScript.
+    // Indica que no se puede comprar porque el coche está reservado.
+
+    exit;
+    // Detiene el código para no seguir procesando.
+}
+
+
 // Insertar compra
 $sqlInsert = "INSERT IGNORE INTO compras (id_usuario, id_coche, precio_coche) VALUES (?, ?, ?)";
 // Define una consulta SQL para insertar un registro en la tabla "compras".

@@ -486,9 +486,10 @@ document.addEventListener("DOMContentLoaded", function () {
           // Convierte la respuesta a JSON
           const data = await response.json();
 
-          // Si hay un error en la respuesta, lo registra
-          if (data.error) {
+          // Si la respuesta del servidor no es exitosa (ej: error 409 o 500)
+          if (!response.ok) {
             console.error(`Error al procesar la compra de ${item.marca} ${item.modelo}:`, data.error);
+            alert(data.error); // Muestra el error específico (ej: "Este coche ya ha sido vendido")
             comprasFallidas++;
           } else {
             // Si no hay error, incrementa el contador de éxito
@@ -511,11 +512,6 @@ document.addEventListener("DOMContentLoaded", function () {
       cerrarModal();
       // Vuelve a cargar los coches para actualizar la lista
       obtenerCoches();
-    }
-
-    // Si hubo compras fallidas, muestra un mensaje
-    if (comprasFallidas > 0) {
-      alert(`Hubo errores al procesar la compra de ${comprasFallidas} artículo(s). Revisa la consola para más detalles.`);
     }
   }
 
