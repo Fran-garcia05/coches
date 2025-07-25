@@ -17,6 +17,7 @@ $conn = $db->getConexion();
 // y la almacena en la variable $conn.
 
 $message = '';
+$message_type = '';
 // Inicializa una variable $message vacía para almacenar mensajes de éxito o error
 // que se mostrarán al usuario en la interfaz.
 
@@ -42,6 +43,7 @@ if (isset($_POST['register'])) {
     // Verifica si alguno de los campos (nombre, email, contraseña) está vacío.
 
         $message = "Completa todos los campos para registrarte.";
+        $message_type = 'error';
         // Si falta algún campo, establece un mensaje de error para mostrar al usuario.
 
     } else {
@@ -65,6 +67,7 @@ if (isset($_POST['register'])) {
         // Si num_rows es mayor a 0, significa que el correo ya está registrado.
 
             $message = "El correo ya está registrado.";
+            $message_type = 'error';
             // Establece un mensaje de error para indicar que el email ya existe.
 
         } else {
@@ -86,10 +89,12 @@ if (isset($_POST['register'])) {
             // Ejecuta la consulta para insertar el usuario en la base de datos.
 
                 $message = "Usuario registrado con éxito. Ahora puedes iniciar sesión.";
+                $message_type = 'success';
                 // Si la inserción es exitosa, establece un mensaje de éxito.
 
             } else {
                 $message = "Error al registrar el usuario.";
+                $message_type = 'error';
                 // Si falla la inserción, establece un mensaje de error.
 
             }
@@ -117,6 +122,7 @@ if (isset($_POST['login'])) {
     // Verifica si alguno de los campos (email, contraseña) está vacío.
 
         $message = "Por favor completa todos los campos para iniciar sesión.";
+        $message_type = 'error';
         // Si falta algún campo, establece un mensaje de error.
 
     } else {
@@ -162,6 +168,7 @@ if (isset($_POST['login'])) {
 
         } else {
             $message = "Correo o contraseña incorrectos.";
+            $message_type = 'error';
             // Si no se encuentra el usuario o la contraseña no coincide, establece un mensaje de error.
         }
 
@@ -269,6 +276,10 @@ $db->close();
         /* Estiliza los mensajes de error o éxito con texto centrado y color rojo. */
     }
 
+    .message.success {
+        color: green;
+    }
+
     .divider {
         margin: 30px 0 15px;
         text-align: center;
@@ -326,7 +337,7 @@ $db->close();
     </form>
 
     <?php if (!empty($message)): ?>
-        <div class="message"><?php echo $message; ?></div>
+        <div class="message <?php echo $message_type; ?>"><?php echo $message; ?></div>
     <?php endif; ?>
 </div>
 

@@ -675,6 +675,15 @@ if(!isset($_SESSION['id_usuario'])){
       background-color: #b02a37;
       /* Fondo rojo más oscuro al pasar el ratón. */
     }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .fade-out {
+      animation: fadeOut 2s forwards;
+    }
   </style>
 </head>
 
@@ -694,6 +703,14 @@ if(!isset($_SESSION['id_usuario'])){
       </ul>
     </div>
   </nav>
+
+  <div id="welcome-message" style="text-align: center; padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin: 10px auto; max-width: 80%;">
+        <?php
+        if (isset($_SESSION['user_name'])) {
+            echo "¡Bienvenido, " . htmlspecialchars($_SESSION['user_name']) . "!";
+        }
+        ?>
+    </div>
 
   <button id="logoutBtn">Cerrar sesión</button>
   <!-- Botón para cerrar sesión, fijo en la esquina superior izquierda. -->
@@ -773,5 +790,21 @@ if(!isset($_SESSION['id_usuario'])){
   <script src="funciones.js"></script>
   <!-- Incluye un archivo JavaScript externo (funciones.js) que contiene
        el código para cargar coches, manejar el catálogo, filtros, carrito y modal. -->
+
+  <script>
+    /* Script para ocultar el mensaje de bienvenida después de 3 segundos con animación. */
+    document.addEventListener('DOMContentLoaded', () => {
+      const welcomeMessage = document.getElementById('welcome-message');
+      if (welcomeMessage) {
+        setTimeout(() => {
+          welcomeMessage.classList.add('fade-out');
+          // Espera a que la animación termine para ocultar el elemento
+          setTimeout(() => {
+            welcomeMessage.style.display = 'none';
+          }, 2000); // Duración de la animación
+        }, 3000); // 3000 milisegundos = 3 segundos
+      }
+    });
+  </script>
 </body>
 </html>
